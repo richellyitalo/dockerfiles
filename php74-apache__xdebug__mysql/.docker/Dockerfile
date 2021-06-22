@@ -1,6 +1,5 @@
 FROM php:7.4.1-apache
 
-
 USER root
 
 WORKDIR /var/www/html
@@ -30,8 +29,10 @@ RUN yes | pecl install xdebug \
     && echo "xdebug.client_host=host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
     && echo "xdebug.remote_connect_back=1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
+RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
+
 COPY .docker/vhost.conf /etc/apache2/sites-available/000-default.conf
-# Alternative to "vhost.conf"
+# Alternative to "copy ... vhost...
 # RUN sed -i -e "s/html/html\/public/g" /etc/apache2/sites-enabled/000-default.conf
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
